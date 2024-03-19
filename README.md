@@ -2,6 +2,18 @@
     <img src="https://raw.githubusercontent.com/brunopedrazza/Solnet/master/assets/icon.png" margin="auto" height="175"/>
 </p>
 
+<p align="center">
+    <a href="https://github.com/brunopedrazza/Solnet/actions/workflows/dotnet.yml">
+        <img src="https://github.com/brunopedrazza/Solnet/actions/workflows/dotnet.yml/badge.svg"
+            alt="Build" ></a>
+    <a href="https://github.com/brunopedrazza/Solnet/actions/workflows/publish.yml">
+       <img src="https://github.com/brunopedrazza/Solnet/actions/workflows/publish.yml/badge.svg" 
+            alt="Release"></a>
+    <a href="https://coveralls.io/github/brunopedrazza/Solnet?branch=master">
+        <img src="https://coveralls.io/repos/github/brunopedrazza/Solnet/badge.svg?branch=master" 
+            alt="Coverage Status" ></a>
+<br/>
+    
 <div style="text-align:center">
 
 <p>
@@ -28,6 +40,7 @@ Solnet is Solana's .NET SDK to integrate with the .NET ecosystem. Wherever you a
     - Native Programs
       - System Program
       - Stake Program
+      - Compute Budget Program
     - Solana Program Library (SPL)
       - Memo Program
       - Token Program
@@ -36,16 +49,9 @@ Solnet is Solana's .NET SDK to integrate with the .NET ecosystem. Wherever you a
       - Name Service Program
       - Shared Memory Program
 
-For the sake of maintainability and sometimes due to the size and complexity of some other programs, this repository will only contain Solana's Native Programs and Programs who are part of the SPL,
-for a list of other commonly needed programs see below:
-
-- [Serum](https://github.com/bmresearch/Solnet.Serum/)
-- [Mango](https://github.com/bmresearch/Solnet.Mango/)
-- [Pyth](https://github.com/bmresearch/Solnet.Pyth/)
-- [Metaplex](https://github.com/bmresearch/Solnet.Metaplex/)
 
 ## Requirements
-- net 5.0
+- net 6.0
 
 ## Dependencies
 - Chaos.NaCl.Standard
@@ -401,13 +407,6 @@ var sig = tokenWallet.Send(source, 12.75M, target, txBuilder => txBuilder.Build(
 Console.WriteLine($"tx: {sig}");
 ```
 
-## Support
-
-Consider supporting us:
-
-* Sol Address: **oaksGKfwkFZwCniyCF35ZVxHDPexQ3keXNTiLa7RCSp**
-* [Mango Ref Link](https://trade.mango.markets/?ref=MangoSharp)
-
 
 ## Contribution
 
@@ -417,6 +416,7 @@ We encourage everyone to contribute, submit issues, PRs, discuss. Every kind of 
 
 * **Hugo** - [murlokito](https://github.com/murlokito)
 * **Tiago** - [tiago](https://github.com/tiago18c)
+* **Bruno** - [bruno](https://github.com/brunopedrazza)
 
 See also the list of [contributors](https://github.com/brunopedrazza/Solnet/contributors) who participated in this project.
 
