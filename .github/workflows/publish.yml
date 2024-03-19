@@ -22,52 +22,52 @@ jobs:
           target: Pack
           cake-version: 1.1.0
           cake-bootstrap: true
-      - name: Publish Solnet.Extensions on version change
+      - name: Publish Solnett.Extensions on version change
         uses: bmresearch/publish-nuget@master
         with:
           PROJECT_FILE_PATH: src/Solnet.Extensions/Solnet.Extensions.csproj
-          PACKAGE_NAME: Solnet.Extensions
+          PACKAGE_NAME: Solnett.Extensions
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_FORMAT: v*
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
-      - name: Publish Solnet.Wallet on version change
+      - name: Publish Solnett.Wallet on version change
         uses: bmresearch/publish-nuget@master
         with:
           PROJECT_FILE_PATH: src/Solnet.Wallet/Solnet.Wallet.csproj
-          PACKAGE_NAME: Solnet.Wallet
+          PACKAGE_NAME: Solnett.Wallet
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_FORMAT: v*
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
-      - name: Publish Solnet.Rpc on version change
+      - name: Publish Solnett.Rpc on version change
         uses: bmresearch/publish-nuget@master
         with:
           PROJECT_FILE_PATH: src/Solnet.Rpc/Solnet.Rpc.csproj
-          PACKAGE_NAME: Solnet.Rpc
+          PACKAGE_NAME: Solnett.Rpc
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_FORMAT: v*
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
-      - name: Publish Solnet.KeyStore on version change
+      - name: Publish Solnett.KeyStore on version change
         uses: bmresearch/publish-nuget@master
         with:
           PROJECT_FILE_PATH: src/Solnet.KeyStore/Solnet.KeyStore.csproj
-          PACKAGE_NAME: Solnet.KeyStore
+          PACKAGE_NAME: Solnett.KeyStore
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_FORMAT: v*
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
-      - name: Publish Solnet.Programs on version change
+      - name: Publish Solnett.Programs on version change
         id: publish_nuget
         uses: bmresearch/publish-nuget@master
         with:
           PROJECT_FILE_PATH: src/Solnet.Programs/Solnet.Programs.csproj
-          PACKAGE_NAME: Solnet.Programs
+          PACKAGE_NAME: Solnett.Programs
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_FORMAT: v*
@@ -82,35 +82,35 @@ jobs:
           body_path: RELEASE-NOTES.txt
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      - name: Upload Solnet.Extensions release assets
+      - name: Upload Solnett.Extensions release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
           file: artifacts/Solnet.Extensions.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Solnet.Wallet release assets
+      - name: Upload Solnett.Wallet release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
           file: artifacts/Solnet.Wallet.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Solnet.Rpc release assets
+      - name: Upload Solnett.Rpc release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
           file: artifacts/Solnet.Rpc.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Solnet.KeyStore release assets
+      - name: Upload Solnett.KeyStore release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
           file: artifacts/Solnet.KeyStore.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Solnet.Programs release assets
+      - name: Upload Solnett.Programs release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
