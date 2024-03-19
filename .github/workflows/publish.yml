@@ -23,7 +23,7 @@ jobs:
           cake-version: 1.1.0
           cake-bootstrap: true
       - name: Publish Solnett.Extensions on version change
-        uses: bmresearch/publish-nuget@master
+        uses: brunopedrazza/publish-nuget@master
         with:
           PROJECT_FILE_PATH: src/Solnet.Extensions/Solnet.Extensions.csproj
           PACKAGE_NAME: Solnett.Extensions
@@ -33,7 +33,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
       - name: Publish Solnett.Wallet on version change
-        uses: bmresearch/publish-nuget@master
+        uses: brunopedrazza/publish-nuget@master
         with:
           PROJECT_FILE_PATH: src/Solnet.Wallet/Solnet.Wallet.csproj
           PACKAGE_NAME: Solnett.Wallet
@@ -43,7 +43,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
       - name: Publish Solnett.Rpc on version change
-        uses: bmresearch/publish-nuget@master
+        uses: brunopedrazza/publish-nuget@master
         with:
           PROJECT_FILE_PATH: src/Solnet.Rpc/Solnet.Rpc.csproj
           PACKAGE_NAME: Solnett.Rpc
@@ -53,7 +53,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
       - name: Publish Solnett.KeyStore on version change
-        uses: bmresearch/publish-nuget@master
+        uses: brunopedrazza/publish-nuget@master
         with:
           PROJECT_FILE_PATH: src/Solnet.KeyStore/Solnet.KeyStore.csproj
           PACKAGE_NAME: Solnett.KeyStore
@@ -64,7 +64,7 @@ jobs:
           INCLUDE_SYMBOLS: true
       - name: Publish Solnett.Programs on version change
         id: publish_nuget
-        uses: bmresearch/publish-nuget@master
+        uses: brunopedrazza/publish-nuget@master
         with:
           PROJECT_FILE_PATH: src/Solnet.Programs/Solnet.Programs.csproj
           PACKAGE_NAME: Solnett.Programs
