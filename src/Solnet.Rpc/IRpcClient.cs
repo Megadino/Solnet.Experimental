@@ -1096,9 +1096,10 @@ namespace Solnet.Rpc
         /// </remarks>
         /// </summary>
         /// <param name="signature">Transaction signature as base-58 encoded string.</param>
+        /// <param name="maxSupportedTransactionVersion">Set the max transaction version to return in responses.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<TransactionMetaSlotInfo>> GetTransactionAsync(string signature,
+        Task<RequestResult<TransactionMetaSlotInfo>> GetTransactionAsync(string signature, uint? maxSupportedTransactionVersion = null,
             Commitment commitment = Commitment.Finalized);
 
         /// <summary>
@@ -1126,9 +1127,11 @@ namespace Solnet.Rpc
         /// </remarks>
         /// </summary>
         /// <param name="signature">Transaction signature as base-58 encoded string.</param>
+        /// <param name="maxSupportedTransactionVersion">Set the max transaction version to return in responses.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
-        RequestResult<TransactionMetaSlotInfo> GetTransaction(string signature, Commitment commitment = Commitment.Finalized);
+        RequestResult<TransactionMetaSlotInfo> GetTransaction(string signature, uint? maxSupportedTransactionVersion = null, 
+            Commitment commitment = Commitment.Finalized);
 
         /// <summary>
         /// Returns transaction details for a confirmed transaction.
