@@ -1,6 +1,7 @@
 ﻿using Solnet.Extensions.TokenMint;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,9 +75,9 @@ namespace Solnet.Extensions
         public override string ToString()
         {
             if (Symbol == TokenName)
-                return $"{QuantityDecimal} {Symbol}";
+                return $"{QuantityDecimal.ToString(CultureInfo.InvariantCulture)} {Symbol}";
             else
-                return $"{QuantityDecimal} {Symbol} ({TokenName})";
+                return $"{QuantityDecimal.ToString(CultureInfo.InvariantCulture)} {Symbol} ({TokenName})";
         }
 
         /// <summary>

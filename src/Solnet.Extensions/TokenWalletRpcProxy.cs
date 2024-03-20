@@ -77,7 +77,7 @@ namespace Solnet.Extensions
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
         public async Task<RequestResult<string>> SendTransactionAsync(byte[] transaction, bool skipPreflight = false, Commitment commitment = Commitment.Finalized)
         {
-            return await _client.SendTransactionAsync(transaction, skipPreflight, commitment);
+            return await _client.SendTransactionAsync(transaction: transaction, skipPreflight: skipPreflight, preFlightCommitment: commitment);
         }
     }
 }
