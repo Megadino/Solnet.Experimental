@@ -554,6 +554,64 @@ namespace Solnet.Rpc.Test
             Assert.AreEqual(TransactionErrorType.InvalidRentPayingAccount, first.Meta.Error.Type);
             FinishTest(messageHandlerMock, TestnetUri);
         }
+        
+        [TestMethod]
+        public void TestGetTransactionVersioned()
+        {
+            var responseData = File.ReadAllText("Resources/Http/Transaction/GetTransactionVersionedResponse.json");
+            var requestData = File.ReadAllText("Resources/Http/Transaction/GetTransactionVersionedRequest.json");
+            var sentMessage = string.Empty;
+            var messageHandlerMock = SetupTest(
+                (s => sentMessage = s), responseData);
+
+            var httpClient = new HttpClient(messageHandlerMock.Object)
+            {
+                BaseAddress = TestnetUri
+            };
+            var sut = new SolanaRpcClient(TestnetUrl, null, httpClient);
+
+            var res = sut.GetTransaction("2KLm7JmcMgZgNNqmsrp3vX3G7U4wg4JQ4NUydeUWJRQA9nJPkCWsMJGr5V2eQSyKe8Jpztghv6w2kDerJX16MxSz", maxSupportedTransactionVersion: 0);
+
+            Assert.AreEqual(requestData, sentMessage);
+            Assert.IsNotNull(res.Result);
+
+            Assert.AreEqual(255401968UL, res.Result.Slot);
+
+            Assert.AreEqual(1710963316, res.Result.BlockTime);
+            
+            TransactionMetaInfo first = res.Result;
+
+            Assert.IsNull(first.Meta.Error);
+
+            Assert.AreEqual(1005001UL, first.Meta.Fee);
+            Assert.AreEqual(2, first.Meta.InnerInstructions.Length);
+            Assert.AreEqual(110, first.Meta.LogMessages.Length);
+            Assert.AreEqual(43, first.Meta.PostBalances.Length);
+            Assert.AreEqual(684571363UL, first.Meta.PostBalances[0]);
+            Assert.AreEqual(43, first.Meta.PreBalances.Length);
+            Assert.AreEqual(96756112UL, first.Meta.PreBalances[0]);
+            Assert.AreEqual(13, first.Meta.PostTokenBalances.Length);
+            Assert.AreEqual(13, first.Meta.PreTokenBalances.Length);
+
+            Assert.AreEqual(1, first.Transaction.Signatures.Length);
+            Assert.AreEqual("2KLm7JmcMgZgNNqmsrp3vX3G7U4wg4JQ4NUydeUWJRQA9nJPkCWsMJGr5V2eQSyKe8Jpztghv6w2kDerJX16MxSz", first.Transaction.Signatures[0]);
+
+            Assert.AreEqual(15, first.Transaction.Message.AccountKeys.Length);
+            Assert.AreEqual("5fVwGG2By5gLcpwH1RsqxYDyMzA5FfDRsRBPEvGDsSNu", first.Transaction.Message.AccountKeys[0]);
+
+            Assert.AreEqual(0, first.Transaction.Message.Header.NumReadonlySignedAccounts);
+            Assert.AreEqual(8, first.Transaction.Message.Header.NumReadonlyUnsignedAccounts);
+            Assert.AreEqual(1, first.Transaction.Message.Header.NumRequiredSignatures);
+
+            Assert.AreEqual(6, first.Transaction.Message.Instructions.Length);
+            Assert.AreEqual(6, first.Transaction.Message.Instructions[2].Accounts.Length);
+            Assert.AreEqual("3K7fezMZDETh", first.Transaction.Message.Instructions[1].Data);
+
+            Assert.AreEqual(7, first.Transaction.Message.Instructions[0].ProgramIdIndex);
+
+            Assert.AreEqual("AwqZBjWfsFBE1ozAHgp8TkxSz3C82MgtA2JuT43GgVti", first.Transaction.Message.RecentBlockhash);
+            FinishTest(messageHandlerMock, TestnetUri);
+        }
 
         [TestMethod]
         public void TestGetTransactionProcessed()
@@ -571,7 +629,7 @@ namespace Solnet.Rpc.Test
             };
             var sut = new SolanaRpcClient(TestnetUrl, null, httpClient);
 
-            var res = sut.GetTransaction("5as3w4KMpY23MP5T1nkPVksjXjN7hnjHKqiDxRMxUNcw5XsCGtStayZib1kQdyR2D9w8dR11Ha9Xk38KP3kbAwM1", Commitment.Processed);
+            var res = sut.GetTransaction("5as3w4KMpY23MP5T1nkPVksjXjN7hnjHKqiDxRMxUNcw5XsCGtStayZib1kQdyR2D9w8dR11Ha9Xk38KP3kbAwM1", commitment: Commitment.Processed);
 
             Assert.AreEqual(requestData, sentMessage);
             Assert.IsNotNull(res.Result);
