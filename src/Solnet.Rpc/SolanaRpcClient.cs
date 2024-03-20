@@ -1027,17 +1027,19 @@ namespace Solnet.Rpc
 
         #region Transactions
 
-        /// <inheritdoc cref="IRpcClient.SendTransactionAsync(byte[], bool, Commitment)"/>
-        public async Task<RequestResult<string>> SendTransactionAsync(byte[] transaction, bool skipPreflight = false,
+        /// <inheritdoc cref="IRpcClient.SendTransactionAsync(byte[], bool, uint?, ulong?, Commitment)"/>
+        public async Task<RequestResult<string>> SendTransactionAsync(
+            byte[] transaction, bool skipPreflight = false, uint? maxRetries = null, ulong? minContextSlot = null,
             Commitment preflightCommitment = Commitment.Finalized)
         {
-            return await SendTransactionAsync(Convert.ToBase64String(transaction), skipPreflight, preflightCommitment)
+            return await SendTransactionAsync(Convert.ToBase64String(transaction), skipPreflight, maxRetries, minContextSlot, preflightCommitment)
                 .ConfigureAwait(false);
         }
 
 
-        /// <inheritdoc cref="IRpcClient.SendTransactionAsync(string, bool, Commitment)"/>
-        public async Task<RequestResult<string>> SendTransactionAsync(string transaction, bool skipPreflight = false,
+        /// <inheritdoc cref="IRpcClient.SendTransactionAsync(string, bool, uint?, ulong?, Commitment)"/>
+        public async Task<RequestResult<string>> SendTransactionAsync(
+            string transaction, bool skipPreflight = false, uint? maxRetries = null, ulong? minContextSlot = null,
             Commitment preflightCommitment = Commitment.Finalized)
         {
             return await SendRequestAsync<string>("sendTransaction",
@@ -1045,20 +1047,24 @@ namespace Solnet.Rpc
                     transaction,
                     ConfigObject.Create(
                         KeyValue.Create("skipPreflight", skipPreflight ? skipPreflight : null),
+                        KeyValue.Create("maxRetries", maxRetries),
+                        KeyValue.Create("minContextSlot", minContextSlot),
                         KeyValue.Create("preflightCommitment",
                             preflightCommitment == Commitment.Finalized ? null : preflightCommitment),
                         KeyValue.Create("encoding", BinaryEncoding.Base64))));
         }
 
-        /// <inheritdoc cref="IRpcClient.SendTransaction(string, bool, Commitment)"/>
-        public RequestResult<string> SendTransaction(string transaction, bool skipPreFlight = false,
+        /// <inheritdoc cref="IRpcClient.SendTransaction(string, bool, uint?, ulong?, Commitment)"/>
+        public RequestResult<string> SendTransaction(
+            string transaction, bool skipPreflight = false, uint? maxRetries = null, ulong? minContextSlot = null,
             Commitment preFlightCommitment = Commitment.Finalized)
-            => SendTransactionAsync(transaction, skipPreFlight, preFlightCommitment).Result;
+            => SendTransactionAsync(transaction, skipPreflight, maxRetries, minContextSlot, preFlightCommitment).Result;
 
-        /// <inheritdoc cref="IRpcClient.SendTransactionAsync(byte[], bool, Commitment)"/>
-        public RequestResult<string> SendTransaction(byte[] transaction, bool skipPreFlight = false,
+        /// <inheritdoc cref="IRpcClient.SendTransactionAsync(byte[], bool, uint?, ulong?, Commitment)"/>
+        public RequestResult<string> SendTransaction(
+            byte[] transaction, bool skipPreflight = false, uint? maxRetries = null, ulong? minContextSlot = null,
             Commitment preFlightCommitment = Commitment.Finalized)
-            => SendTransactionAsync(transaction, skipPreFlight, preFlightCommitment).Result;
+            => SendTransactionAsync(transaction, skipPreflight, maxRetries, minContextSlot, preFlightCommitment).Result;
 
         /// <inheritdoc cref="IRpcClient.SimulateTransactionAsync(string, bool, Commitment, bool, IList{string})"/>
         public async Task<RequestResult<ResponseValue<SimulationLogs>>> SimulateTransactionAsync(string transaction,

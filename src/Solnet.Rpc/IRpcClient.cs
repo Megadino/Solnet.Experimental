@@ -1217,41 +1217,49 @@ namespace Solnet.Rpc
         /// Sends a transaction.
         /// </summary>
         /// <param name="transaction">The signed transaction as base-64 encoded string.</param>
-        /// <param name="skipPreflight">If true skip the prflight transaction checks (default false).</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
+        /// <param name="maxRetries">The maximum number of times for the RPC node to retry sending the transaction to the leader. If this parameter not provided, the RPC node will retry the transaction until it is finalized or until the blockhash expires.</param>
+        /// <param name="minContextSlot">The minimum slot at which to perform preflight transaction checks.</param>
         /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<string>> SendTransactionAsync(string transaction, bool skipPreflight = false,
+        Task<RequestResult<string>> SendTransactionAsync(byte[] transaction, bool skipPreflight = false, uint? maxRetries = null, ulong? minContextSlot = null,
             Commitment preFlightCommitment = Commitment.Finalized);
 
         /// <summary>
         /// Sends a transaction.
         /// </summary>
         /// <param name="transaction">The signed transaction as base-64 encoded string.</param>
-        /// <param name="skipPreflight">If true skip the prflight transaction checks (default false).</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
+        /// <param name="maxRetries">The maximum number of times for the RPC node to retry sending the transaction to the leader. If this parameter not provided, the RPC node will retry the transaction until it is finalized or until the blockhash expires.</param>
+        /// <param name="minContextSlot">The minimum slot at which to perform preflight transaction checks.</param>
         /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
-        RequestResult<string> SendTransaction(string transaction, bool skipPreflight = false,
+        RequestResult<string> SendTransaction(string transaction, bool skipPreflight = false, uint? maxRetries = null, ulong? minContextSlot = null,
             Commitment preFlightCommitment = Commitment.Finalized);
 
         /// <summary>
         /// Sends a transaction.
         /// </summary>
         /// <param name="transaction">The signed transaction as byte array.</param>
-        /// <param name="skipPreflight">If true skip the prflight transaction checks (default false).</param>
-        /// <param name="commitment">The block commitment used to retrieve block hashes and verify success.</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
+        /// <param name="maxRetries">The maximum number of times for the RPC node to retry sending the transaction to the leader. If this parameter not provided, the RPC node will retry the transaction until it is finalized or until the blockhash expires.</param>
+        /// <param name="minContextSlot">The minimum slot at which to perform preflight transaction checks.</param>
+        /// <param name="preFlightCommitment">The block commitment used to retrieve block hashes and verify success.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<string>> SendTransactionAsync(byte[] transaction, bool skipPreflight = false,
-             Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<string>> SendTransactionAsync(string transaction, bool skipPreflight = false, uint? maxRetries = null, ulong? minContextSlot = null,
+             Commitment preFlightCommitment = Commitment.Finalized);
 
         /// <summary>
         /// Sends a transaction.
         /// </summary>
         /// <param name="transaction">The signed transaction as byte array.</param>
-        /// <param name="skipPreflight">If true skip the prflight transaction checks (default false).</param>
-        /// <param name="commitment">The block commitment used to retrieve block hashes and verify success.</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
+        /// <param name="maxRetries">The maximum number of times for the RPC node to retry sending the transaction to the leader. If this parameter not provided, the RPC node will retry the transaction until it is finalized or until the blockhash expires.</param>
+        /// <param name="minContextSlot">The minimum slot at which to perform preflight transaction checks.</param>
+        /// <param name="preFlightCommitment">The block commitment used to retrieve block hashes and verify success.</param>
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
-        RequestResult<string> SendTransaction(byte[] transaction, bool skipPreflight = false,
-            Commitment commitment = Commitment.Finalized);
+        RequestResult<string> SendTransaction(byte[] transaction, bool skipPreflight = false, uint? maxRetries = null, ulong? minContextSlot = null,
+            Commitment preFlightCommitment = Commitment.Finalized);
 
         /// <summary>
         /// Simulate sending a transaction.
