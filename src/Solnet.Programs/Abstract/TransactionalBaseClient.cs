@@ -71,7 +71,7 @@ namespace Solnet.Programs.Abstract
                 tb.AddSignature(signingCallback(wireFmt, msg.AccountKeys[i]));
             }
 
-            return await RpcClient.SendTransactionAsync(tb.Serialize(), commitment: commitment);
+            return await RpcClient.SendTransactionAsync(tb.Serialize(), preFlightCommitment: commitment);
         }
 
         /// <summary>

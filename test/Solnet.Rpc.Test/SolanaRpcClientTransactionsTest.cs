@@ -98,6 +98,38 @@ namespace Solnet.Rpc.Test
 
             FinishTest(messageHandlerMock, TestnetUri);
         }
+        
+        [TestMethod]
+        public void TestSendTransactionExtraParams()
+        {
+            var responseData = File.ReadAllText("Resources/Http/Transaction/SendTransactionExtraParamsResponse.json");
+            var requestData = File.ReadAllText("Resources/Http/Transaction/SendTransactionExtraParamsRequest.json");
+            var sentMessage = string.Empty;
+            var messageHandlerMock = SetupTest(
+                (s => sentMessage = s), responseData);
+
+            var httpClient = new HttpClient(messageHandlerMock.Object)
+            {
+                BaseAddress = TestnetUri,
+            };
+
+            var sut = new SolanaRpcClient(TestnetUrl, null, httpClient);
+            var txData = "ASIhFkj3HRTDLiPxrxudL7eXCQ3DKrBB6Go/pn0sHWYIYgIHWYu2jZjbDXQseCEu73Li53BP7AEt8lCwKz" +
+                         "X5awcBAAIER2mrlyBLqD\u002Bwyu4X94aPHgdOUhWBoNidlDedqmW3F7J7rHLZwOnCKOnqrRmjOO1w2JcV0XhP" +
+                         "LlWiw5thiFgQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABUpTUPhdyILWFKVWcniKKW3fHqur0KY" +
+                         "GeIhJMvTu9qCKNNRNmSFNMnUzw5\u002BFDszWV6YvuvspBr0qlIoAdeg67wICAgABDAIAAACAlpgAAAAAAAMBA" +
+                         "BVIZWxsbyBmcm9tIFNvbC5OZXQgOik=";
+
+            var result = sut.SendTransaction(transaction: txData, maxRetries: 5, skipPreflight: false, preFlightCommitment: Commitment.Confirmed, minContextSlot: 259525972UL);
+
+            Assert.AreEqual(requestData, sentMessage);
+            Assert.IsNotNull(result.Result);
+            Assert.IsTrue(result.WasSuccessful);
+            Assert.AreEqual("gaSFQXFqbYQypZdMFZy4Fe7uB2VFDEo4sGDypyrVxFgzZqc5MqWnRWTT9hXamcrFRcsiiH15vWii5ACSsyNScbp",
+                result.Result);
+
+            FinishTest(messageHandlerMock, TestnetUri);
+        }
 
         [TestMethod]
         public void TestSendTransactionBytes()
@@ -122,7 +154,7 @@ namespace Solnet.Rpc.Test
 
             var bytes = Convert.FromBase64String(txData);
 
-            var result = sut.SendTransaction(bytes, true, Commitment.Confirmed);
+            var result = sut.SendTransaction(transaction: bytes, skipPreflight: true, preFlightCommitment: Commitment.Confirmed);
 
             Assert.AreEqual(requestData, sentMessage);
             Assert.IsNotNull(result.Result);

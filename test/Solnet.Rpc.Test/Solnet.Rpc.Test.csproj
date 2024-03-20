@@ -735,6 +735,12 @@
     <None Update="Resources\Http\Fees\GetRecentPrioritizationFeesResponse.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\Http\Transaction\SendTransactionExtraParamsRequest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Http\Transaction\SendTransactionExtraParamsResponse.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
