@@ -122,6 +122,17 @@ namespace Solnet.Rpc.Builders
             _messageBuilder.NonceInformation = nonceInfo;
             return this;
         }
+        
+        /// <summary>
+        /// Sets the priority fees information for the transaction.
+        /// </summary>
+        /// <param name="priorityFeesInfo">The priority fees information object to use.</param>
+        /// <returns>The transaction builder, so instruction addition can be chained.</returns>
+        public TransactionBuilder SetPriorityFeesInformation(PriorityFeesInformation priorityFeesInfo)
+        {
+            _messageBuilder.PriorityFeesInformation = priorityFeesInfo;
+            return this;
+        }
 
         /// <summary>
         /// Sets the fee payer for the transaction.

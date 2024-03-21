@@ -44,6 +44,11 @@ namespace Solnet.Rpc.Builders
         /// The nonce information to be used instead of the recent blockhash.
         /// </summary>
         internal NonceInformation NonceInformation { get; set; }
+        
+        /// <summary>
+        /// The priority fees information of the transaction.
+        /// </summary>
+        internal PriorityFeesInformation PriorityFeesInformation { get; set; }
 
         /// <summary>
         /// The transaction fee payer.
@@ -83,7 +88,31 @@ namespace Solnet.Rpc.Builders
             if (Instructions == null)
                 throw new Exception("no instructions provided in the transaction");
 
-            // In case the user specified nonce information, we'll use it.
+            // In case the user specified a SetComputeUnitPrice instruction
+            if (PriorityFeesInformation?.SetComputeUnitPriceInstruction != null)
+            {
+                TransactionInstruction instruction = PriorityFeesInformation.SetComputeUnitPriceInstruction;
+                _accountKeysList.Add(instruction.Keys);
+                _accountKeysList.Add(AccountMeta.ReadOnly(new PublicKey(instruction.ProgramId),
+                    false));
+                List<TransactionInstruction> newInstructions = new() { instruction };
+                newInstructions.AddRange(Instructions);
+                Instructions = newInstructions;
+            }
+            
+            // In case the user specified a SetComputeUnitLimit instruction - it must be the first instruction or the second one if a NonceInformation is specified
+            if (PriorityFeesInformation?.SetComputeUnitLimitInstruction != null)
+            {
+                TransactionInstruction instruction = PriorityFeesInformation.SetComputeUnitLimitInstruction;
+                _accountKeysList.Add(instruction.Keys);
+                _accountKeysList.Add(AccountMeta.ReadOnly(new PublicKey(instruction.ProgramId),
+                    false));
+                List<TransactionInstruction> newInstructions = new() { instruction };
+                newInstructions.AddRange(Instructions);
+                Instructions = newInstructions;
+            }
+
+            // In case the user specified nonce information, we'll use it - it must be the first instruction
             if (NonceInformation != null)
             {
                 RecentBlockHash = NonceInformation.Nonce;
