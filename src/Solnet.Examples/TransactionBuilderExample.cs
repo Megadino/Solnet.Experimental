@@ -1,4 +1,5 @@
 using Solnet.Programs;
+using Solnet.Programs.ComputeBudget;
 using Solnet.Programs.Models;
 using Solnet.Rpc;
 using Solnet.Rpc.Builders;
@@ -372,8 +373,54 @@ namespace Solnet.Examples
                     SystemProgram.Transfer(
                         ownerAccount,
                         toAccount,
-                        1_000_000_000)
+                        1_000_000)
                 )
+                .Build(ownerAccount);
+
+            Console.WriteLine($"Tx: {Convert.ToBase64String(tx)}");
+            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
+            Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
+
+            RequestResult<string> txReq = rpcClient.SendTransaction(tx);
+            Console.WriteLine($"Tx Signature: {txReq.Result}");
+        }
+    }
+    
+        public class TransactionBuilderTransferWithPriorityFeesExample : IExample
+    {
+        private static readonly IRpcClient rpcClient = ClientFactory.GetClient(Cluster.TestNet);
+        private const string MnemonicWords =
+            "route clerk disease box emerge airport loud waste attitude film army tray " +
+            "forward deal onion eight catalog surface unit card window walnut wealth medal";
+
+        public void Run()
+        {
+            Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
+
+            Account ownerAccount = wallet.GetAccount(10);
+            Console.WriteLine($"OwnerAccount: {ownerAccount}");
+            Account toAccount = wallet.GetAccount(1);
+            Console.WriteLine($"ToAccount: {toAccount}");
+            
+            RequestResult<ResponseValue<LatestBlockHash>> blockHash = rpcClient.GetLatestBlockHash();
+            
+            PriorityFeesInformation priorityFeesInfo = new PriorityFeesInformation()
+            {
+                SetComputeUnitLimitInstruction = ComputeBudgetProgram.SetComputeUnitLimit(400_000),
+                SetComputeUnitPriceInstruction = ComputeBudgetProgram.SetComputeUnitPrice(100_000)
+            };
+
+            byte[] tx = new TransactionBuilder()
+                .SetFeePayer(ownerAccount)
+                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .AddInstruction(
+                    SystemProgram.Transfer(
+                        ownerAccount,
+                        toAccount,
+                        1_000_000)
+                )
+                .SetPriorityFeesInformation(priorityFeesInfo)
                 .Build(ownerAccount);
 
             Console.WriteLine($"Tx: {Convert.ToBase64String(tx)}");
