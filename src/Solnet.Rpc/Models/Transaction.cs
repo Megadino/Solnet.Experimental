@@ -40,6 +40,22 @@ namespace Solnet.Rpc.Models
         /// </summary>
         public TransactionInstruction Instruction { get; set; }
     }
+    
+    /// <summary>
+    /// Priority fees information to be used on a transaction.
+    /// </summary>
+    public class PriorityFeesInformation
+    {
+        /// <summary>
+        /// SetComputeUnitLimit instruction to set priority fees on a transaction.
+        /// </summary>
+        public TransactionInstruction SetComputeUnitLimitInstruction { get; set; }
+        
+        /// <summary>
+        /// SetComputeUnitPrice instruction to set priority fees on a transaction.
+        /// </summary>
+        public TransactionInstruction SetComputeUnitPriceInstruction { get; set; }
+    }
 
     /// <summary>
     /// Represents a Transaction in Solana.
@@ -68,6 +84,14 @@ namespace Solnet.Rpc.Models
         /// </remarks>
         /// </summary>
         public NonceInformation NonceInformation { get; set; }
+        
+        /// <summary>
+        /// The priority fees information of the transaction.
+        /// <remarks>
+        /// When this is set, the <see cref="PriorityFeesInformation"/>'s instructions are added at the beginning of the transaction.
+        /// </remarks>
+        /// </summary>
+        public PriorityFeesInformation PriorityFeesInformation { get; set; }
 
         /// <summary>
         /// The signatures for the transaction.
@@ -87,6 +111,7 @@ namespace Solnet.Rpc.Models
 
             if (RecentBlockHash != null) messageBuilder.RecentBlockHash = RecentBlockHash;
             if (NonceInformation != null) messageBuilder.NonceInformation = NonceInformation;
+            if (PriorityFeesInformation != null) messageBuilder.PriorityFeesInformation = PriorityFeesInformation;
 
             foreach (TransactionInstruction instruction in Instructions)
             {
@@ -339,6 +364,7 @@ namespace Solnet.Rpc.Models
                     tx.NonceInformation = new NonceInformation { Instruction = instruction, Nonce = tx.RecentBlockHash };
                     continue;
                 }
+                
                 tx.Instructions.Add(instruction);
             }
 
