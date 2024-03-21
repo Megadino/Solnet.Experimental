@@ -95,7 +95,7 @@ namespace Solnet.Rpc.Builders
                 _accountKeysList.Add(instruction.Keys);
                 _accountKeysList.Add(AccountMeta.ReadOnly(new PublicKey(instruction.ProgramId),
                     false));
-                List<TransactionInstruction> newInstructions = [instruction];
+                List<TransactionInstruction> newInstructions = new() { instruction };
                 newInstructions.AddRange(Instructions);
                 Instructions = newInstructions;
             }
@@ -107,7 +107,7 @@ namespace Solnet.Rpc.Builders
                 _accountKeysList.Add(instruction.Keys);
                 _accountKeysList.Add(AccountMeta.ReadOnly(new PublicKey(instruction.ProgramId),
                     false));
-                List<TransactionInstruction> newInstructions = [instruction];
+                List<TransactionInstruction> newInstructions = new() { instruction };
                 newInstructions.AddRange(Instructions);
                 Instructions = newInstructions;
             }
