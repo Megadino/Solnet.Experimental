@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Solnet.Programs;
+using Solnet.Programs.ComputeBudget;
 using Solnet.Rpc.Builders;
 using Solnet.Rpc.Models;
 using Solnet.Wallet;
@@ -47,6 +48,13 @@ namespace Solnet.Rpc.Test
             "cXsgFHaauXIEuoP7DK7hf3ho8eB05SFYGg2J2UN52qZbcXsgMCAAE0AAAAAPAdHwAAAAAApQA" +
             "AAAAAAAAG3fbh12Whk9nL4UbO63msHLSF7V9bN5E6jPWFfv8AqQYEAQIABQEBBgMCAQAJB6hh" +
             "AAAAAAAABAEBEkhlbGxvIGZyb20gU29sLk5ldA==";
+        
+        private const string ExpectedTransactionWithPriorityFees =
+            "ARqI0iR2oVNDASDRffW1q2Tg37+HscfElZragqnj7z/1mNxjNs14DK1atOlCTzEnw3KsQtKCgn" +
+            "mBOA3qh+sDnAkBAAIER2mrlyBLqD+wyu4X94aPHgdOUhWBoNidlDedqmW3F7KE3M6r5DRwldqu" +
+            "wlqOuXDDOWZagXmbHnAU3w5Dg44kogAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAw" +
+            "ZGb+UhFzL/7K26csOb57yM5bvF9xJrLEObOkAAAABEixald4nI54jqHpYLSWViej50bnmzhen0" +
+            "yUOsH2zbbgMDAAUCgBoGAAMACQOghgEAAAAAAAICAAEMAgAAAEBCDwAAAAAA";
 
         private const string Nonce = "2S1kjspXLPs6jpNVXQfNMqZzzSrKLbGdr9Fxap5h1DLN";
 
@@ -258,6 +266,30 @@ namespace Solnet.Rpc.Test
                 .Serialize();
 
             Assert.AreEqual(AddSignatureTransaction, Convert.ToBase64String(tx));
+        }
+        
+        [TestMethod]
+        public void TestTransactionWithPriorityFeesInformation()
+        {
+            Wallet.Wallet wallet = new(MnemonicWords);
+
+            Account fromAccount = wallet.GetAccount(10);
+            Account toAccount = wallet.GetAccount(1);
+            
+            PriorityFeesInformation priorityFeesInfo = new PriorityFeesInformation()
+            {
+                SetComputeUnitLimitInstruction = ComputeBudgetProgram.SetComputeUnitLimit(400_000),
+                SetComputeUnitPriceInstruction = ComputeBudgetProgram.SetComputeUnitPrice(100_000)
+            };
+            
+            var tx = new TransactionBuilder()
+                .SetRecentBlockHash(Blockhash)
+                .SetFeePayer(fromAccount)
+                .AddInstruction(SystemProgram.Transfer(fromAccount.PublicKey, toAccount.PublicKey, 1_000_000))
+                .SetPriorityFeesInformation(priorityFeesInfo)
+                .Build(fromAccount);
+            
+            Assert.AreEqual(ExpectedTransactionWithPriorityFees, Convert.ToBase64String(tx));
         }
     }
 }
