@@ -281,7 +281,7 @@ namespace Solnet.Wallet
         /// <exception cref="ArgumentException">Throws exception when one of the seeds has an invalid length.</exception>
         public static bool TryCreateProgramAddress(ICollection<byte[]> seeds, PublicKey programId, out PublicKey publicKey)
         {
-            MemoryStream buffer = new(PublicKeyLength * seeds.Count + ProgramDerivedAddressBytes.Length + programId.KeyBytes.Length);
+            using MemoryStream buffer = new(PublicKeyLength * seeds.Count + ProgramDerivedAddressBytes.Length + programId.KeyBytes.Length);
 
             foreach (byte[] seed in seeds)
             {
@@ -353,7 +353,7 @@ namespace Solnet.Wallet
         public static bool TryCreateWithSeed(PublicKey fromPublicKey, string seed, PublicKey programId, out PublicKey publicKeyOut)
         {
             var b58 = new Base58Encoder();
-            MemoryStream buffer = new();
+            using MemoryStream buffer = new();
 
             buffer.Write(fromPublicKey.KeyBytes);
             buffer.Write(Encoding.UTF8.GetBytes(seed));

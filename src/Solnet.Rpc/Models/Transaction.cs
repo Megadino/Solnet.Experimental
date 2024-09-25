@@ -295,7 +295,7 @@ namespace Solnet.Rpc.Models
         {
             byte[] signaturesLength = ShortVectorEncoding.EncodeLength(Signatures.Count);
             byte[] serializedMessage = CompileMessage();
-            MemoryStream buffer = new(signaturesLength.Length + Signatures.Count * TransactionBuilder.SignatureLength +
+            using MemoryStream buffer = new(signaturesLength.Length + Signatures.Count * TransactionBuilder.SignatureLength +
                                       serializedMessage.Length);
 
             buffer.Write(signaturesLength);

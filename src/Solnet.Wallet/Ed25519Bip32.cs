@@ -63,7 +63,7 @@ namespace Solnet.Wallet
         /// <returns>A tuple consisting of the key and corresponding chain code.</returns>
         private static (byte[] Key, byte[] ChainCode) GetChildKeyDerivation(byte[] key, byte[] chainCode, uint index)
         {
-            MemoryStream buffer = new();
+            using MemoryStream buffer = new();
 
             buffer.Write(new byte[] { 0 });
             buffer.Write(key);

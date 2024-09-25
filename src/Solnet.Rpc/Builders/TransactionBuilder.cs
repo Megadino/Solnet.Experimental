@@ -50,7 +50,7 @@ namespace Solnet.Rpc.Builders
             byte[] signaturesLength = ShortVectorEncoding.EncodeLength(_signatures.Count);
             if (_serializedMessage == null)
                 _serializedMessage = _messageBuilder.Build();
-            MemoryStream buffer = new(signaturesLength.Length + _signatures.Count * SignatureLength + _serializedMessage.Length);
+            using MemoryStream buffer = new(signaturesLength.Length + _signatures.Count * SignatureLength + _serializedMessage.Length);
 
             buffer.Write(signaturesLength);
             foreach (string signature in _signatures)

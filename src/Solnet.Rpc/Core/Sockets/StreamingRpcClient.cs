@@ -147,7 +147,7 @@ namespace Solnet.Rpc.Core.Sockets
             {
                 if (!result.EndOfMessage)
                 {
-                    MemoryStream ms = new MemoryStream();
+                    using MemoryStream ms = new MemoryStream();
                     ms.Write(mem.Span);
 
 
