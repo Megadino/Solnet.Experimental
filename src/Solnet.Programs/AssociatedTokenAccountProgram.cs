@@ -64,6 +64,38 @@ namespace Solnet.Programs
         }
 
         /// <summary>
+        /// Initialize a new transaction which interacts with the Associated Token Account Program to create
+        /// a new associated token account idempotent.
+        /// </summary>
+        /// <param name="payer">The public key of the account used to fund the associated token account.</param>
+        /// <param name="owner">The public key of the owner account for the new associated token account.</param>
+        /// <param name="mint">The public key of the mint for the new associated token account.</param>
+        /// <returns>The transaction instruction, returns null whenever an associated token address could not be derived..</returns>
+
+        public static TransactionInstruction CreateAssociatedTokenAccountIdempotent(PublicKey payer, PublicKey owner, PublicKey mint)
+        {
+            PublicKey associatedTokenAddress = DeriveAssociatedTokenAccount(owner, mint);
+
+            if (associatedTokenAddress == null) return null;
+
+            List<AccountMeta> keys = new()
+            {
+                AccountMeta.Writable(payer, true),
+                AccountMeta.Writable(associatedTokenAddress, false),
+                AccountMeta.ReadOnly(owner, false),
+                AccountMeta.ReadOnly(mint, false),
+                AccountMeta.ReadOnly(SystemProgram.ProgramIdKey, false),
+                AccountMeta.ReadOnly(TokenProgram.ProgramIdKey, false),
+            };
+
+            return new TransactionInstruction
+            {
+                ProgramId = ProgramIdKey.KeyBytes,
+                Keys = keys,
+                Data = [1]
+            };
+        }
+        /// <summary>
         /// Derive the public key of the associated token account for the
         /// </summary>
         /// <param name="owner">The public key of the owner account for the new associated token account.</param>
