@@ -85,7 +85,7 @@ namespace Solnet.Programs
                 {
                     decodedInstruction = AddUnknownInstruction(
                         instructionInfo, programKey, txMetaInfo.Transaction.Message.AccountKeys,
-                        txMetaInfo.Transaction.Message.Instructions[i].Accounts);
+                        txMetaInfo.Transaction.Message.Instructions[i].Accounts.Select(Convert.ToInt32).ToList());
                 }
                 else
                 {
@@ -110,7 +110,7 @@ namespace Solnet.Programs
                             {
                                 innerDecodedInstruction = AddUnknownInstruction(
                                     innerInstructionInfo, programKey, txMetaInfo.Transaction.Message.AccountKeys,
-                                    txMetaInfo.Transaction.Message.Instructions[i].Accounts);
+                                    txMetaInfo.Transaction.Message.Instructions[i].Accounts.Select(Convert.ToInt32).ToList());
                             }
                             else
                             {
