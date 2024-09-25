@@ -413,7 +413,7 @@ namespace Solnet.Programs
         /// <returns>A decoded instruction.</returns>
         public static DecodedInstruction Decode(ReadOnlySpan<byte> data, IList<PublicKey> keys, byte[] keyIndices)
         {
-            uint instruction = data.GetU32(StakeProgramData.MethodOffset);
+            uint instruction = data.GetU8(StakeProgramData.MethodOffset);
 
             if (!Enum.IsDefined(typeof(NameServiceInstructions.Values), instruction))
             {
