@@ -6,6 +6,7 @@ using Solnet.Wallet.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Solnet.Programs
 {
@@ -72,12 +73,12 @@ namespace Solnet.Programs
         /// <returns>The decoded instructions data.</returns>
         public static List<DecodedInstruction> DecodeInstructions(TransactionMetaInfo txMetaInfo)
         {
-            List<DecodedInstruction> decodedInstructions = new();
+            var decodedInstructions = new DecodedInstruction[txMetaInfo.Transaction.Message.Instructions.Length].ToList();
 
-            for (int i = 0; i < txMetaInfo.Transaction.Message.Instructions.Length; i++)
+            Parallel.For(0, txMetaInfo.Transaction.Message.Instructions.Length, new ParallelOptions() { MaxDegreeOfParallelism = 8 }, i =>
             {
                 DecodedInstruction decodedInstruction = null;
-                InstructionInfo instructionInfo = txMetaInfo.Transaction.Message.Instructions[i];
+                var instructionInfo = txMetaInfo.Transaction.Message.Instructions[i];
                 string programKey = txMetaInfo.Transaction.Message.AccountKeys[instructionInfo.ProgramIdIndex];
                 bool registered = InstructionDictionary.TryGetValue(programKey, out DecodeMethodType method);
 
@@ -94,13 +95,14 @@ namespace Solnet.Programs
                                         txMetaInfo.Transaction.Message.AccountKeys.Select(a => new PublicKey(a)).ToList(),
                                         instructionInfo.Accounts.Select(instr => (byte)instr).ToArray());
                 }
+
                 if (txMetaInfo.Meta.InnerInstructions != null)
                 {
-                    foreach (InnerInstruction innerInstruction in txMetaInfo.Meta.InnerInstructions)
+                    foreach (var innerInstruction in txMetaInfo.Meta.InnerInstructions)
                     {
                         if (innerInstruction.Index != i) continue;
 
-                        foreach (InstructionInfo innerInstructionInfo in innerInstruction.Instructions)
+                        foreach (var innerInstructionInfo in innerInstruction.Instructions)
                         {
                             DecodedInstruction innerDecodedInstruction = null;
                             programKey = txMetaInfo.Transaction.Message.AccountKeys[innerInstructionInfo.ProgramIdIndex];
@@ -124,10 +126,12 @@ namespace Solnet.Programs
                         }
                     }
                 }
+
                 if (decodedInstruction != null)
-                    decodedInstructions.Add(decodedInstruction);
-            }
-            return decodedInstructions;
+                    decodedInstructions[i] = decodedInstruction;
+            });
+            
+            return decodedInstructions.Where(x => x != null).ToList();
         }
 
         /// <summary>
