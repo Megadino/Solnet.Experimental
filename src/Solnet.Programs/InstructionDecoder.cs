@@ -75,24 +75,29 @@ namespace Solnet.Programs
         {
             var decodedInstructions = new DecodedInstruction[txMetaInfo.Transaction.Message.Instructions.Length].ToList();
 
-            Parallel.For(0, txMetaInfo.Transaction.Message.Instructions.Length, new ParallelOptions() { MaxDegreeOfParallelism = 8 }, i =>
+            var allKeys = txMetaInfo.Transaction.Message.AccountKeys
+                .Concat(txMetaInfo.Meta.LoadedAddresses.Readonly)
+                .Concat(txMetaInfo.Meta.LoadedAddresses.Writable)
+                .ToArray();
+
+            Parallel.For(0, txMetaInfo.Transaction.Message.Instructions.Length, new ParallelOptions() { MaxDegreeOfParallelism = 8 }, i =>            
             {
                 DecodedInstruction decodedInstruction = null;
                 var instructionInfo = txMetaInfo.Transaction.Message.Instructions[i];
-                string programKey = txMetaInfo.Transaction.Message.AccountKeys[instructionInfo.ProgramIdIndex];
+                string programKey = allKeys[instructionInfo.ProgramIdIndex];
                 bool registered = InstructionDictionary.TryGetValue(programKey, out DecodeMethodType method);
 
                 if (!registered)
                 {
                     decodedInstruction = AddUnknownInstruction(
-                        instructionInfo, programKey, txMetaInfo.Transaction.Message.AccountKeys,
+                        instructionInfo, programKey, allKeys,
                         txMetaInfo.Transaction.Message.Instructions[i].Accounts.Select(Convert.ToInt32).ToList());
                 }
                 else
                 {
                     decodedInstruction = method.Invoke(
                                         Encoders.Base58.DecodeData(instructionInfo.Data),
-                                        txMetaInfo.Transaction.Message.AccountKeys.Select(a => new PublicKey(a)).ToList(),
+                                        allKeys.Select(a => new PublicKey(a)).ToList(),
                                         instructionInfo.Accounts.Select(instr => (byte)instr).ToArray());
                 }
 
@@ -105,20 +110,20 @@ namespace Solnet.Programs
                         foreach (var innerInstructionInfo in innerInstruction.Instructions)
                         {
                             DecodedInstruction innerDecodedInstruction = null;
-                            programKey = txMetaInfo.Transaction.Message.AccountKeys[innerInstructionInfo.ProgramIdIndex];
+                            programKey = allKeys[innerInstructionInfo.ProgramIdIndex];
                             registered = InstructionDictionary.TryGetValue(programKey, out method);
 
                             if (!registered)
                             {
                                 innerDecodedInstruction = AddUnknownInstruction(
-                                    innerInstructionInfo, programKey, txMetaInfo.Transaction.Message.AccountKeys,
+                                    innerInstructionInfo, programKey, allKeys,
                                     txMetaInfo.Transaction.Message.Instructions[i].Accounts.Select(Convert.ToInt32).ToList());
                             }
                             else
                             {
                                 innerDecodedInstruction = method.Invoke(
                                     Encoders.Base58.DecodeData(innerInstructionInfo.Data),
-                                    txMetaInfo.Transaction.Message.AccountKeys.Select(a => new PublicKey(a)).ToList(),
+                                    allKeys.Select(a => new PublicKey(a)).ToList(),
                                     innerInstructionInfo.Accounts.Select(instr => (byte)instr).ToArray());
                             }
                             if (innerDecodedInstruction != null)
@@ -128,7 +133,10 @@ namespace Solnet.Programs
                 }
 
                 if (decodedInstruction != null)
+                {
+                    decodedInstruction.Signature = txMetaInfo.Transaction.Signatures.First();
                     decodedInstructions[i] = decodedInstruction;
+                }
             });
             
             return decodedInstructions.Where(x => x != null).ToList();
@@ -195,8 +203,8 @@ namespace Solnet.Programs
                 PublicKey = new PublicKey(programKey)
             };
             for (int j = 0; j < keyIndices.Count; j++)
-            {
-                decodedInstruction.Values.Add($"Account {j + 1}", keys[keyIndices[j]]);
+            {                
+                decodedInstruction.Values.Add($"Account {j + 1}", keys[keyIndices[j]]);                
             }
 
             return decodedInstruction;

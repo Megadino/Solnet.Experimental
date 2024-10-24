@@ -11,6 +11,11 @@ namespace Solnet.Programs
     public class DecodedInstruction
     {
         /// <summary>
+        /// The signature of transaction.
+        /// </summary>
+        public string Signature { get; set; }
+
+        /// <summary>
         /// The public key of the program.
         /// </summary>
         public PublicKey PublicKey { get; set; }

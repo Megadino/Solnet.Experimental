@@ -247,8 +247,17 @@ namespace Solnet.Rpc.Models
         /// Array of string log messages or omitted if log message recording was not yet enabled during this transaction.
         /// </summary>
         public string[] LogMessages { get; set; }
+
+        public LoadedAddresses LoadedAddresses { get; set; }
     }
 
+
+    public class LoadedAddresses
+    {
+        public string[] Readonly { get; set; }
+
+        public string[] Writable { get; set; }
+    }
     /// <summary>
     /// Represents the structure of a token balance metadata for a transaction.
     /// </summary>
