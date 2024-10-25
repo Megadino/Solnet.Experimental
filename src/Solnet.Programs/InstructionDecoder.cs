@@ -75,10 +75,16 @@ namespace Solnet.Programs
         {
             var decodedInstructions = new DecodedInstruction[txMetaInfo.Transaction.Message.Instructions.Length].ToList();
 
-            var allKeys = txMetaInfo.Transaction.Message.AccountKeys
-                .Concat(txMetaInfo.Meta.LoadedAddresses.Readonly)
-                .Concat(txMetaInfo.Meta.LoadedAddresses.Writable)
-                .ToArray();
+            var allKeys = txMetaInfo.Transaction.Message.AccountKeys;
+
+            if (txMetaInfo.Meta.LoadedAddresses != null)
+            {
+                if (txMetaInfo.Meta.LoadedAddresses.Readonly != null)
+                    allKeys = allKeys.Concat(txMetaInfo.Meta.LoadedAddresses.Readonly).ToArray();
+
+                if (txMetaInfo.Meta.LoadedAddresses.Writable != null)
+                    allKeys = allKeys.Concat(txMetaInfo.Meta.LoadedAddresses.Writable).ToArray();
+            }
 
             Parallel.For(0, txMetaInfo.Transaction.Message.Instructions.Length, new ParallelOptions() { MaxDegreeOfParallelism = 8 }, i =>            
             {
