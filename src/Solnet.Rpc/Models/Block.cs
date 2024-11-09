@@ -81,6 +81,8 @@ namespace Solnet.Rpc.Models
         /// The metadata information.
         /// </summary>
         public TransactionMeta Meta { get; set; }
+
+        public ulong Index { get; set; }
     }
 
     /// <summary>
