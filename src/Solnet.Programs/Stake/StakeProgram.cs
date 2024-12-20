@@ -444,7 +444,7 @@ namespace Solnet.Programs
                     StakeProgramData.DecodeInitializeData(decodedInstruction, data, keys, keyIndices);
                     break;
                 case StakeProgramInstructions.Values.Authorize:
-                    StakeProgramData.DecodeAuthorizeData(decodedInstruction, data, keys, keyIndices);
+                    ///StakeProgramData.DecodeAuthorizeData(decodedInstruction, data, keys, keyIndices);
                     break;
                 case StakeProgramInstructions.Values.DelegateStake:
                     StakeProgramData.DecodeDelegateStakeData(decodedInstruction, data, keys, keyIndices);
