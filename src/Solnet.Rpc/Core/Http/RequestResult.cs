@@ -54,12 +54,12 @@ namespace Solnet.Rpc.Core.Http
         /// <summary>
         /// Contains the JSON RPC request payload
         /// </summary>
-        public string RawRpcRequest { get; internal set; }
+        public string RawRpcRequest { get; set; }
 
         /// <summary>
         /// Contains the JSON RPC response payload
         /// </summary>
-        public string RawRpcResponse { get; internal set; }
+        public string RawRpcResponse { get; set; }
 
         /// <summary>
         /// Initialize the request result.
