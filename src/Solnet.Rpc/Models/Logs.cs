@@ -62,6 +62,8 @@ namespace Solnet.Rpc.Models
         public string[] Logs { get; set; }
 
         public ulong UnitsConsumed { get; set; }
+
+
     }
 
     /// <summary>
