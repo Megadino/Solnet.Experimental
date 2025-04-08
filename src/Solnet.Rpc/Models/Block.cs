@@ -251,6 +251,8 @@ namespace Solnet.Rpc.Models
         public string[] LogMessages { get; set; }
 
         public LoadedAddresses LoadedAddresses { get; set; }
+
+        public ulong Slot { get; set; }
     }
 
 
